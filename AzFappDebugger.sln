@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzFappDebugger", "AzFappDebugger.csproj", "{D546F189-9A00-4A2F-80F0-A2C6E2BB81A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D546F189-9A00-4A2F-80F0-A2C6E2BB81A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D546F189-9A00-4A2F-80F0-A2C6E2BB81A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D546F189-9A00-4A2F-80F0-A2C6E2BB81A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D546F189-9A00-4A2F-80F0-A2C6E2BB81A0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5BFE1E8-CED0-47D5-B76F-F6423AF81366}
+	EndGlobalSection
+EndGlobal
