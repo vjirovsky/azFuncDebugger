@@ -20,13 +20,20 @@ namespace AzFappDebugger.Tests
         private string _enforcedPrimaryDnsServer = string.Empty;
         private string _enforcedAltDnsServer = string.Empty;
 
+        private List<string> interestingEnvVariables = new List<string>() {
+            Constants.APPSERVICE_VNET_ROUTEALL_VARIABLE,
+            Constants.APPSERVICE_DNS_SERVER_VARIABLE,
+            Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE
+        };
 
-        internal DnsTests(IDictionary<string, string> environmentVariablesDictionary) {
+
+        internal DnsTests(IDictionary<string, string> environmentVariablesDictionary)
+        {
 
             _environmentVariablesDictionary = environmentVariablesDictionary;
 
 
-            
+
             _environmentVariablesDictionary.TryGetValue(Constants.APPSERVICE_DNS_SERVER_VARIABLE, out _enforcedPrimaryDnsServer);
             if (!string.IsNullOrEmpty(_enforcedPrimaryDnsServer))
             {
@@ -39,7 +46,7 @@ namespace AzFappDebugger.Tests
             }
 
 
-            
+
             _environmentVariablesDictionary.TryGetValue(Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE, out _enforcedAltDnsServer);
             if (!string.IsNullOrEmpty(_enforcedAltDnsServer))
             {
@@ -66,13 +73,40 @@ namespace AzFappDebugger.Tests
             {
                 output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", "<strong>Microsoft's managed public DNS servers</strong>");
             }
-            else {
-                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", $"<strong>Custom DNS servers</strong><br><ul><li>Primary server: {_enforcedPrimaryDnsServer}</li><li>Secondary server: {_enforcedAltDnsServer}</li></ul>");
+            else if (!string.IsNullOrEmpty(_enforcedPrimaryDnsServer) && _enforcedPrimaryDnsServer.Equals(Constants.APPSERVICE_DNS_SERVER_RESERVED_PRIVATE_DNS))
+            {
+                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", "<strong>Microsoft's managed public DNS servers</strong> <span class='badge text-bg-success'>with Azure Private DNS Zones support</span>" +
+                    "" +
+                    HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer", "This setup enables resolving records hosted in Azure Private DNS Zones within vNET.", false));
+            }
+            else
+            {
+                //I do have custom DNS only
+                string tooltipText = "";
+                
+                //TODO:what about new routeall option
+                if (_environmentVariablesDictionary.ContainsKey(Constants.APPSERVICE_VNET_ROUTEALL_VARIABLE) && _environmentVariablesDictionary[Constants.APPSERVICE_VNET_ROUTEALL_VARIABLE] == "1")
+                {
+                    // I have route all
+                    tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer", 
+                        "<p>You have custom DNS servers with <i>Route all</i> option enabled. " +
+                        "That means all DNS requests from your application will be forwarded via vNET to selected DNS server(s).</p>" +
+                        "<p>Out-of-box, this setup bypass any DNS records stored in Azure Private DNS Zones, so these records can be irresolvable from your application.</p>" +
+                        "<p>To enable integration with Azure Private DNS Zones you need to set up your custom DNS with a service Azure DNS Private Resolver.<br> <a href='https://docs.microsoft.com/en-us/azure/dns/dns-private-resolver-overview' target='_blank'>more info</a></p>", false);
+                    output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", $"<strong>Custom DNS servers</strong> <span class='badge text-bg-info'>with vNET Route All</span> <span class='badge text-bg-warning'>can affect Azure Private DNS Zones resolution</span><br><ul><li>Primary server: {_enforcedPrimaryDnsServer}</li><li>Secondary server: {_enforcedAltDnsServer}</li></ul> {tooltipText}");
+                    
+                }
+                else
+                {
+
+                    output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", $"<strong>Custom DNS servers</strong><br><ul><li>Primary server: {_enforcedPrimaryDnsServer}</li><li>Secondary server: {_enforcedAltDnsServer}</li></ul> {tooltipText}");
+                }
+
             }
 
 
             output += "</table>";
-            
+
 
             output += "<table class=\"table\">";
 
@@ -87,7 +121,7 @@ namespace AzFappDebugger.Tests
 
             string dnsDomainsToResolveToParse;
             _environmentVariablesDictionary.TryGetValue(Constants.TEST_DNS_RESOLVE_DOMAIN_VARIABLE, out dnsDomainsToResolveToParse);
-            
+
             output += "<h3>DNS queries <small>(AppService nameresolver.exe)</small></h3>";
             output += "<table class=\"table\">";
 #if DEBUG
@@ -125,7 +159,7 @@ namespace AzFappDebugger.Tests
                         p.StartInfo.RedirectStandardOutput = true;
                         p.Start();
                         p.WaitForExit();
-                        
+
 
                         testResult = p.StandardOutput.ReadToEnd();
                     }
