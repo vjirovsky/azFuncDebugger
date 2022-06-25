@@ -52,7 +52,7 @@ namespace AzFappDebugger
             ILogger log)
         {
             string responseMessage = "";
-            responseMessage += "<h1>" +
+            responseMessage += "<br><h1>" +
                 "Azure Functions environment debugger tool<br>"+
                 "</h1>";
 
@@ -74,7 +74,7 @@ namespace AzFappDebugger
 
 
             responseMessage += "" +
-                "<ul class='nav nav-tabs' id='myTab'>" +
+                "<br><ul class='nav nav-tabs' id='myTab'>" +
                     HtmlBrandingHelper.GetBootstrapTabNavItem(0, "Overview", true) +
                     HtmlBrandingHelper.GetBootstrapTabNavItem(1, "DNS") +
                     HtmlBrandingHelper.GetBootstrapTabNavItem(2, "Outbound connectivity") +

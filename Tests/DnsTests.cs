@@ -62,7 +62,8 @@ namespace AzFappDebugger.Tests
 
         internal string RunAllTestsAsHtmlOutput()
         {
-            string output = "";
+            string output = "", tooltipText = "";
+
             output += "<h2>DNS</h2>";
 
 
@@ -71,36 +72,44 @@ namespace AzFappDebugger.Tests
 
             if (string.IsNullOrEmpty(_enforcedPrimaryDnsServer) && string.IsNullOrEmpty(_enforcedAltDnsServer))
             {
-                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", "<strong>Microsoft's managed public DNS servers</strong>");
+                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", 
+                    "<strong>Microsoft's managed public DNS servers</strong>" +
+                    "<span class='badge text-bg-warning'>problematic Azure Private DNS Zones support</span>" +
+                    
+                    HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer",
+                    "<p>The application is using default Azure public DNS servers.</p>" +
+                    "<p>During access to private resources, this setup could introduce random issues with resolving records hosted in Azure Private DNS Zones within vNET." +
+                    "Sometimes private resources (PrivateLink) could be resolved with their public IP addresses instead of the desired private IP address.</p>" +
+                    $"<p>To avoid such problems, change in the configuration variable <i>{Constants.APPSERVICE_DNS_SERVER_VARIABLE}</i> to value <i>{Constants.APPSERVICE_DNS_SERVER_RESERVED_PRIVATE_DNS}</i><br>" +
+                    $"<a href='https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-dns#virtual-network-and-on-premises-workloads-using-a-dns-forwarder' target='_blank'>more info</a></p>", false)
+                    );
             }
             else if (!string.IsNullOrEmpty(_enforcedPrimaryDnsServer) && _enforcedPrimaryDnsServer.Equals(Constants.APPSERVICE_DNS_SERVER_RESERVED_PRIVATE_DNS))
             {
-                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", "<strong>Microsoft's managed public DNS servers</strong> <span class='badge text-bg-success'>with Azure Private DNS Zones support</span>" +
-                    "" +
-                    HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer", "This setup enables resolving records hosted in Azure Private DNS Zones within vNET.", false));
+                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", 
+                    "<strong>Microsoft's managed public DNS servers</strong> " +
+                    "<span class='badge text-bg-success'>with Azure Private DNS Zones support</span>" +
+
+                    HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer", 
+                    "<p>This setup enables resolving records hosted in Azure Private DNS Zones within vNET.<br>" +
+                    "All private resources should be resolvable from the application</p>", false));
             }
             else
             {
                 //I do have custom DNS only
-                string tooltipText = "";
-                
-                //TODO:what about new routeall option
-                if (_environmentVariablesDictionary.ContainsKey(Constants.APPSERVICE_VNET_ROUTEALL_VARIABLE) && _environmentVariablesDictionary[Constants.APPSERVICE_VNET_ROUTEALL_VARIABLE] == "1")
-                {
-                    // I have route all
-                    tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer", 
-                        "<p>You have custom DNS servers with <i>Route all</i> option enabled. " +
-                        "That means all DNS requests from your application will be forwarded via vNET to selected DNS server(s).</p>" +
-                        "<p>Out-of-box, this setup bypass any DNS records stored in Azure Private DNS Zones, so these records can be irresolvable from your application.</p>" +
-                        "<p>To enable integration with Azure Private DNS Zones you need to set up your custom DNS with a service Azure DNS Private Resolver.<br> <a href='https://docs.microsoft.com/en-us/azure/dns/dns-private-resolver-overview' target='_blank'>more info</a></p>", false);
-                    output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", $"<strong>Custom DNS servers</strong> <span class='badge text-bg-info'>with vNET Route All</span> <span class='badge text-bg-warning'>can affect Azure Private DNS Zones resolution</span><br><ul><li>Primary server: {_enforcedPrimaryDnsServer}</li><li>Secondary server: {_enforcedAltDnsServer}</li></ul> {tooltipText}");
-                    
-                }
-                else
-                {
 
-                    output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", $"<strong>Custom DNS servers</strong><br><ul><li>Primary server: {_enforcedPrimaryDnsServer}</li><li>Secondary server: {_enforcedAltDnsServer}</li></ul> {tooltipText}");
-                }
+                tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer",
+                    "<p>You have a custom DNS servers " +
+                    "That means all DNS requests from your application will be forwarded via vNET to selected DNS server(s).</p>" +
+                    "<p>Out-of-box, this setup bypass any DNS records stored in Azure Private DNS Zones, so these records can be irresolvable from your application.</p>" +
+                    "<p>To enable integration with Azure Private DNS Zones you need to set up your custom DNS with a service Azure DNS Private Resolver.<br> <a href='https://docs.microsoft.com/en-us/azure/dns/dns-private-resolver-overview' target='_blank'>more info</a></p>", false);
+
+                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", 
+                    $"<strong>Custom DNS servers</strong> <span class='badge text-bg-warning'>can affect Azure Private DNS Zones resolution</span><br>" +
+                    $"<ul>" +
+                    $"<li>Primary server: {_enforcedPrimaryDnsServer}</li>" +
+                    $"<li>Secondary server: {_enforcedAltDnsServer}</li>" +
+                    $"</ul> {tooltipText}");
 
             }
 
@@ -125,7 +134,7 @@ namespace AzFappDebugger.Tests
             output += "<h3>DNS queries <small>(AppService nameresolver.exe)</small></h3>";
             output += "<table class=\"table\">";
 #if DEBUG
-    output += HtmlBrandingHelper.GetColspanTableRow($"Nameresolver.exe is not available on local machines, just in KUDU.");
+            output += HtmlBrandingHelper.GetColspanTableRow($"Nameresolver.exe is not available on local machines, just in KUDU.");
 
 #else
             if (dnsDomainsToResolveToParse != null)
