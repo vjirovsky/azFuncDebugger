@@ -92,17 +92,18 @@ namespace AzFappDebugger.Tests
 
                     HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer", 
                     "<p>This setup enables resolving records hosted in Azure Private DNS Zones within vNET.<br>" +
-                    "All private resources should be resolvable from the application</p>", false));
+                    "All private resources should be resolvable from the application.</p>", false));
             }
             else
             {
                 //I do have custom DNS only
 
                 tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer",
-                    "<p>You have a custom DNS servers " +
-                    "That means all DNS requests from your application will be forwarded via vNET to selected DNS server(s).</p>" +
+                    "<p>You have a custom DNS servers, " +
+                    "that means all DNS requests from your application will be forwarded via vNET to selected DNS server(s).</p>" +
                     "<p>Out-of-box, this setup bypass any DNS records stored in Azure Private DNS Zones, so these records can be irresolvable from your application.</p>" +
-                    "<p>To enable integration with Azure Private DNS Zones you need to set up your custom DNS with a service Azure DNS Private Resolver.<br> <a href='https://docs.microsoft.com/en-us/azure/dns/dns-private-resolver-overview' target='_blank'>more info</a></p>", false);
+                    "<p>To enable integration with Azure Private DNS Zones, you need to set up your DNS servers with a service Azure DNS Private Resolver to forward requests.<br> " +
+                    "<a href='https://docs.microsoft.com/en-us/azure/dns/dns-private-resolver-overview' target='_blank'>more info</a></p>", false);
 
                 output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", 
                     $"<strong>Custom DNS servers</strong> <span class='badge text-bg-warning'>can affect Azure Private DNS Zones resolution</span><br>" +
