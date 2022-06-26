@@ -125,17 +125,21 @@ namespace AzFappDebugger.Tests
             output += "</table>";
 
 
-            output += "<h2>DNS tests</h2>";
+            output += "<h3>DNS tests</h3>";
 
             var dnsDomainsToResolveList = new List<string>();
 
             string dnsDomainsToResolveToParse;
             _environmentVariablesDictionary.TryGetValue(Constants.TEST_DNS_RESOLVE_DOMAIN_VARIABLE, out dnsDomainsToResolveToParse);
 
-            output += "<h3>DNS queries <small>(AppService nameresolver.exe)</small></h3>";
-            output += "<table class=\"table\">";
+            output += "<h4>AppService resolution test</h4> <small>";
+            output += HtmlBrandingHelper.GetBootstrapWhatItMeans("TestResolutionNameresolver",
+                "This test is performed via <i>nameresolver.exe</i> tool, which provides exactly same results as query resolution in your application.<br><br>" +
+                "This tool is available just in Azure AppService environment, so the test will fail on the local computer.", false, false, "Test description");
+            output += "</small>";
+
 #if DEBUG
-            output += HtmlBrandingHelper.GetColspanTableRow($"Nameresolver.exe is not available on local machines, just in KUDU.");
+            output += $"<div class='callout callout-danger'>Nameresolver.exe is not available on local machines, just in KUDU engine.</div>";
 
 #else
             if (dnsDomainsToResolveToParse != null)
@@ -151,11 +155,14 @@ namespace AzFappDebugger.Tests
             if (dnsDomainsToResolveList.Count == 0)
             {
 
-                output += HtmlBrandingHelper.GetColspanTableRow($"No valid {Constants.TEST_DNS_RESOLVE_DOMAIN_VARIABLE} variable defined, test has been skipped.");
+                output += $"<div class='callout callout-warning'>No valid <i>{ Constants.TEST_DNS_RESOLVE_DOMAIN_VARIABLE}</i> variable defined, test has been skipped.</div>";
 
             }
             else
             {
+
+                output += "<table class=\"table\">";
+
                 foreach (var domain in dnsDomainsToResolveList)
                 {
                     string testResult = "";
@@ -181,8 +188,9 @@ namespace AzFappDebugger.Tests
                     output += HtmlBrandingHelper.GetStandardTableRow($"{domain}", $"<pre>{testResult}</pre>");
 
                 }
+
+                output += "</table>";
             }
-            output += "</table>";
 #endif
 
             //primary DNS requested by WEBSITE_DNS_SERVER
@@ -192,7 +200,7 @@ namespace AzFappDebugger.Tests
 
             if (!string.IsNullOrWhiteSpace(enforcedPrimaryDnsServer) && (dnsDomainsToResolveList.Count > 0) && _dnsLookupEnforcedPrimaryClient != null)
             {
-                output += $"<h3>DNS queries <small>(Primary DNS server requested by {Constants.APPSERVICE_DNS_SERVER_VARIABLE}=<strong>{enforcedPrimaryDnsServer}</strong>)</small></h3>";
+                output += $"<h4>DNS queries <small>(Primary DNS server requested by {Constants.APPSERVICE_DNS_SERVER_VARIABLE}=<strong>{enforcedPrimaryDnsServer}</strong>)</small></h4>";
                 output += "<table class=\"table\">";
                 foreach (var domain in dnsDomainsToResolveList)
                 {
@@ -228,7 +236,7 @@ namespace AzFappDebugger.Tests
 
             if (!string.IsNullOrWhiteSpace(enforcedAltDnsServer) && (dnsDomainsToResolveList.Count > 0) && _dnsLookupEnforcedAltClient != null)
             {
-                output += $"<h3>DNS queries <small>(Alt DNS server requested by {Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE}=<strong>{enforcedAltDnsServer}</strong>)</small></h3>";
+                output += $"<h4>DNS queries <small>(Alt DNS server requested by {Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE}=<strong>{enforcedAltDnsServer}</strong>)</small></h4>";
                 output += "<table class=\"table\">";
                 foreach (var domain in dnsDomainsToResolveList)
                 {

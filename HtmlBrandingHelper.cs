@@ -26,6 +26,8 @@ namespace AzFappDebugger
         {
             return "<style type='text/css'>" +
                 ".callout-info {--bd-callout-bg: rgba(var(--bs-info-rgb), .075);--bd-callout-border: rgba(var(--bs-info-rgb), .5);}" +
+                ".callout-warning {--bd-callout-bg: rgba(var(--bs-warning-rgb), .075);--bd-callout-border: rgba(var(--bs-warning-rgb), .5);}" +
+                ".callout-danger {--bd-callout-bg: rgba(var(--bs-danger-rgb), .075);--bd-callout-border: rgba(var(--bs-danger-rgb), .5);}" +
                 ".callout {padding: 1.25rem;margin-top: 1.25rem;margin-bottom: 1.25rem;background-color: var(--bd-callout-bg, var(--bs-gray-100));border-left: 0.25rem solid var(--bd-callout-border, var(--bs-gray-300));}" +
                 "</style>";
         }
@@ -66,10 +68,10 @@ namespace AzFappDebugger
         }
 
 
-        internal static string GetBootstrapWhatItMeans(string uniqueId, string text, bool isActive = false)
+        internal static string GetBootstrapWhatItMeans(string uniqueId, string text, bool isActive = false, bool isParagraphRequested = true, string navText = "What it means")
         {
-            return $"<p><small><a data-bs-toggle='collapse' href='#whatItMeans{uniqueId}' role='button'>What it means <i class='bi bi-patch-question-fill'></i></a></small></p>" +
-                $"<div class='"+ (isActive ? "": "collapse") + $"' id='whatItMeans{uniqueId}'><div class='callout callout-info'>{text}</div></div>";
+            return $"" + (isParagraphRequested ? "<p>" : "") + $"<small><a data-bs-toggle='collapse' href='#whatItMeans{uniqueId}' role='button'>{navText} <i class='bi bi-patch-question-fill'></i></a></small>" + (isParagraphRequested ? "</p>" : "") +
+                $"<div class='" + (isActive ? "" : "collapse") + $"' id='whatItMeans{uniqueId}'><div class='callout callout-info'>{text}</div></div>";
         }
 
 
