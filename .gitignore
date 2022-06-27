@@ -263,3 +263,4 @@ paket-files/
 __pycache__/
 *.pyc
 /Properties/PublishProfiles
+/Properties/ServiceDependencies/mydnstestfappase - Zip Deploy

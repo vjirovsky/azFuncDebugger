@@ -58,19 +58,20 @@ namespace AzFappDebugger
 
 
             var dnsTestsProvider = new DnsTests(_environmentVariablesDictionary);
-            
-
             var connectivityTestsProvider = new ConnectivityTests(_environmentVariablesDictionary, _httpClient);
+            var overviewTestsProvider = new OverviewTests(_environmentVariablesDictionary);
 
-            string dnsTestsOutput = "", connectivityTestsOutput = ""; 
+            string dnsTestsOutput = "", connectivityTestsOutput = "", overviewTestsOutput = ""; 
 
             var task1 = Task.Factory.StartNew(() => dnsTestsProvider.RunAllTestsAsHtmlOutput());
             var task2 = Task.Factory.StartNew(async() =>  await connectivityTestsProvider.RunAllTestsAsHtmlOutputAsync());
-            
-            
-            await Task.WhenAll(task1, task2);
+            var task4 = Task.Factory.StartNew(() => overviewTestsProvider.RunAllTestsAsHtmlOutput());
+
+
+            await Task.WhenAll(task1, task2, task4);
             dnsTestsOutput = task1.Result;
             connectivityTestsOutput = await task2.Result;
+            overviewTestsOutput = task4.Result;
 
 
             responseMessage += "" +
@@ -81,7 +82,7 @@ namespace AzFappDebugger
                     HtmlBrandingHelper.GetBootstrapTabNavItem(3, "Content storage access") +
                 "</ul>" +
                 "<div class='tab-content' id='myTabContent'>" +
-                    HtmlBrandingHelper.GetBootstrapTabBody(0, "overview", true) +
+                    HtmlBrandingHelper.GetBootstrapTabBody(0, overviewTestsOutput, true) +
                     HtmlBrandingHelper.GetBootstrapTabBody(1, dnsTestsOutput) +
                     HtmlBrandingHelper.GetBootstrapTabBody(2, connectivityTestsOutput) +
                 "</div>";

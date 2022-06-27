@@ -54,7 +54,7 @@ namespace AzFappDebugger.Tests
                     }
                     catch (Exception e)
                     {
-                        testResult = "<span class=\"badge text-bg-danger\">QUERY FAILED</span><br> " + e.InnerException.Message;
+                        testResult = "<span class=\"badge text-bg-danger\">QUERY FAILED</span><br> " + e.Message +"<br>" + (e.InnerException != null ? e.InnerException.Message : "");
                     }
                     finally
                     {
