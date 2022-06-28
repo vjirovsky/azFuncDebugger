@@ -51,11 +51,18 @@ namespace AzFappDebugger.Tests
                 output += HtmlBrandingHelper.GetStandardTableRow("Website hostname", $"<code>{configItemValue}</code>");
             }
 
-            // site hostname
+            // site rg
             configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_RESOURCE_GROUP_VARIABLE);
             if (!string.IsNullOrEmpty(configItemValue))
             {
                 output += HtmlBrandingHelper.GetStandardTableRow("Resource group", $"<code>{configItemValue}</code>");
+            }
+
+            // site region
+            configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_REGION_NAME_VARIABLE);
+            if (!string.IsNullOrEmpty(configItemValue))
+            {
+                output += HtmlBrandingHelper.GetStandardTableRow("Region", $"<code>{configItemValue}</code>");
             }
             
 
@@ -84,7 +91,7 @@ namespace AzFappDebugger.Tests
             string contentFileConnectionString = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_CONTENTAZUREFILECONNECTIONSTRING_VARIABLE);
             string contentFileShare = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_CONTENTSHARE_VARIABLE);
             configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_RUN_FROM_PACKAGE_VARIABLE);
-            if ((!string.IsNullOrEmpty(configItemValue) && configItemValue.Equals("1")) || (string.IsNullOrEmpty(configItemValue) && (string.IsNullOrEmpty(contentFileConnectionString))))
+            if ((!string.IsNullOrEmpty(configItemValue) && configItemValue.Equals("1")) || ((string.IsNullOrEmpty(configItemValue) || configItemValue.Equals("0")) && (string.IsNullOrEmpty(contentFileConnectionString))))
             {
                 // RUN_FROM_PACKAGE is 1 or nothing is defined
                 configItemValue = "Running from local package";
@@ -117,27 +124,16 @@ namespace AzFappDebugger.Tests
                                "and <a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#enable-functions-to-run-from-a-package' target='_blank'>more about local package</a>", false);
                 configItemValue = "Running from Azure Files";
             }
-
+            
             output += HtmlBrandingHelper.GetStandardTableRow("Code location", $"{configItemValue} {tooltipText}");
+
+            // timezone
+            configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_TIME_ZONE_VARIABLE);
+            if (!string.IsNullOrEmpty(configItemValue))
+            {
+                output += HtmlBrandingHelper.GetStandardTableRow("Timezone", $"<code>{configItemValue}</code>");
+            }
             
-
-            
-
-            /*            tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("overview",
-                                "<p>You have a custom DNS servers, " +
-                                "that means all DNS requests from your application will be forwarded via vNET to selected DNS server(s).</p>" +
-                                "<p>Out-of-box, this setup bypass any DNS records stored in Azure Private DNS Zones, so these records can be irresolvable from your application.</p>" +
-                                "<p>To enable integration with Azure Private DNS Zones, you need to set up your DNS servers with a service Azure DNS Private Resolver to forward requests.<br> " +
-                                "<a href='https://docs.microsoft.com/en-us/azure/dns/dns-private-resolver-overview' target='_blank'>more info</a></p>", false);
-
-                        output += HtmlBrandingHelper.GetStandardTableRow("DNS servers",
-                            $"<strong>Custom DNS servers</strong> <span class='badge text-bg-warning'>can affect Azure Private DNS Zones resolution</span><br>" +
-                            $"<ul>" +
-                            $"<li>Primary server: <code>{_enforcedPrimaryDnsServer}</code></li>" +
-                            $"<li>Secondary server: <code>{_enforcedAltDnsServer}</code></li>" +
-                            $"</ul> {tooltipText}");
-            */
-
 
             output += "</table>";
 

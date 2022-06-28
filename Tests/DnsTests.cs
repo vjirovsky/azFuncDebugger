@@ -192,7 +192,7 @@ namespace AzFappDebugger.Tests
 
             output += "<h4>AppService resolution test</h4> <small>";
             output += HtmlBrandingHelper.GetBootstrapWhatItMeans("TestResolutionNameresolver",
-                "This test is performed via <i>nameresolver.exe</i> tool, which provides exactly same results as query resolution in your application.<br><br>" +
+                "This test is performed via <code>nameresolver.exe</code> tool, which provides exactly same results as query resolution in your application.<br><br>" +
                 "This tool is available just in Azure AppService environment, so the test will fail on the local computer.", false, false, "Test description");
             output += "</small>";
 
@@ -205,7 +205,7 @@ namespace AzFappDebugger.Tests
             if (dnsDomainsToResolveList.Count == 0)
             {
 
-                output += $"<div class='callout callout-warning'>No valid <i>{ Constants.TEST_DNS_RESOLVE_DOMAIN_VARIABLE}</i> variable defined, test has been skipped.</div>";
+                output += $"<div class='callout callout-warning'>No valid <code>{Constants.TEST_DNS_RESOLVE_DOMAIN_VARIABLE}</code> variable defined, test has been skipped.</div>";
 
             }
             else
@@ -286,7 +286,7 @@ namespace AzFappDebugger.Tests
             {
                 output += $"<h4>Alternate DNS server <code>{_enforcedAltDnsServer}</code></h4> <small>";
                 output += HtmlBrandingHelper.GetBootstrapWhatItMeans("TestResolutionAltDnsServer",
-                    $"<p>This test performs DNS resolution via DNS client included in this debugger, directly against server <code>{_enforcedAltDnsServer}</code> specified in <i>{Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE}</i> configuration variable.</p>", false, false, "Test description"); 
+                    $"<p>This test performs DNS resolution via DNS client included in this debugger, directly against server <code>{_enforcedAltDnsServer}</code> specified in <code>{Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE}</code> configuration variable.</p>", false, false, "Test description"); 
                 output += "</small>";
 
                 output += "<table class=\"table\">";

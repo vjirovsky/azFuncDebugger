@@ -18,6 +18,11 @@ namespace AzFappDebugger
                 "</head>" +
                 "<body>" +
                 (isWrappedInContainer ? GetBootstrapHtmlContainerWrap(bodyContent) : bodyContent) +
+                "<footer class='bd-footer bg-light small'>" +
+                "   <div class='container text-center link-dark'><br><p>" +
+                "           &copy; <a href='https://www.vjirovsky.cz#utm_source=link&utm_medium=azfundebugger&utm_campaign=footer' target='_blank'>Vaclav Jirovsky</a>, 2022  (<a href='https://github.com/vjirovsky/AzFunDebugger' target='_blank'>GitHub project</a>) " +
+                "   </p></div>" +
+                "</footer>" +
                 "</body>" +
                 "</html>";
         }
@@ -29,6 +34,7 @@ namespace AzFappDebugger
                 ".callout-warning {--bd-callout-bg: rgba(var(--bs-warning-rgb), .075);--bd-callout-border: rgba(var(--bs-warning-rgb), .5);}" +
                 ".callout-danger {--bd-callout-bg: rgba(var(--bs-danger-rgb), .075);--bd-callout-border: rgba(var(--bs-danger-rgb), .5);}" +
                 ".callout {padding: 1.25rem;margin-top: 1.25rem;margin-bottom: 1.25rem;background-color: var(--bd-callout-bg, var(--bs-gray-100));border-left: 0.25rem solid var(--bd-callout-border, var(--bs-gray-300));}" +
+                ".main-tab { min-height: 45vh; }" +
                 "</style>";
         }
         public static string GetBootstrapHtmlContainerWrap(string content)
@@ -64,7 +70,7 @@ namespace AzFappDebugger
         }
         internal static string GetBootstrapTabBody(int id, string text, bool isActive = false)
         {
-            return $"<div class='tab-pane fade" + (isActive ? " show active" : "") + $"' id='main-tab{id}-body' role='tabpanel' tabindex='0'><br>{text}</div>";
+            return $"<div class='tab-pane main-tab fade" + (isActive ? " show active" : "") + $"' id='main-tab{id}-body' role='tabpanel' tabindex='0'><br>{text}</div>";
         }
 
 
