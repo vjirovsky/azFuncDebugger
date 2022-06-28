@@ -1,6 +1,6 @@
 # Azure Functions Environment Debugger
 
-![Tool screeshots](docs/intro.gif)
+<img src="docs/intro.gif" alt="Tool screeshots">
 
 ## Description
 
