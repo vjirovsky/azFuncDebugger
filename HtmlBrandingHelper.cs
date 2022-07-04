@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,7 +81,47 @@ namespace AzFappDebugger
                 $"<div class='" + (isActive ? "" : "collapse") + $"' id='whatItMeans{uniqueId}'><div class='callout callout-info'>{text}</div></div>";
         }
 
+        internal static string NormalizeLength(string value, int maxLength)
+        {
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+        }
 
+        internal static string NiceTlsProtocol(SslProtocols protocol)
+        {
+            switch (protocol)
+            {
+                default:
+                    return protocol.ToString();
+                    break;
+
+                case SslProtocols.None:
+                    return "<<none>>";
+                    break;
+
+                case SslProtocols.Ssl2:
+                    return "SSL 2.0";
+                    break;
+                case SslProtocols.Ssl3:
+                    return "SSL 3.0";
+                    break;
+                case SslProtocols.Tls:
+                    return "TLS 1.0";
+                    break;
+                case SslProtocols.Default:
+                    return "SSL 3.0/TLS 1.0";
+                    break;
+                case SslProtocols.Tls11:
+                    return "TLS 1.1";
+                    break;
+                case SslProtocols.Tls12:
+                    return "TLS 1.2";
+                    break;
+                case SslProtocols.Tls13:
+                    return "TLS 1.3";
+                    break;
+
+            }
+        }
 
     }
 }

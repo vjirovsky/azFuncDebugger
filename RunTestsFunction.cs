@@ -21,11 +21,10 @@ namespace AzFappDebugger
 {
     public static class RunTestsFunction
     {
-        private static HttpClient _httpClient = null;
+        private static HttpClient _defaultHttpClient = null;
+        private static HttpClientHandler _defaultHttpClientHandler = null;
 
         private static IDictionary<string, string> _environmentVariablesDictionary = new Dictionary<string, string>();
-
-
 
         static RunTestsFunction()
         {
@@ -36,12 +35,12 @@ namespace AzFappDebugger
             }
 
 
-
             // ignore SSL cert errors for this debugger (e.g. DPI, proxy, etc.)
-            var httpClientHandler = new HttpClientHandler();
+            _defaultHttpClientHandler = new HttpClientHandler();
 
-            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>{return true;};
-            _httpClient = new HttpClient(httpClientHandler);
+            _defaultHttpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => {return true;};
+
+            _defaultHttpClient = new HttpClient(_defaultHttpClientHandler);
 
         }
 
@@ -58,7 +57,7 @@ namespace AzFappDebugger
 
 
             var dnsTestsProvider = new DnsTests(_environmentVariablesDictionary);
-            var outboundConnectivityTestsProvider = new OutboundConnectivityTests(_environmentVariablesDictionary, _httpClient);
+            var outboundConnectivityTestsProvider = new OutboundConnectivityTests(_environmentVariablesDictionary, _defaultHttpClient);
             var overviewTestsProvider = new OverviewTests(_environmentVariablesDictionary);
             var contentStorageAccessTestsProvider = new ContentStorageAccessTests(_environmentVariablesDictionary);
 
