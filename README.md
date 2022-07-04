@@ -11,9 +11,17 @@ deployed in large complex (typically corporate) environments, with firewalls, ne
 
 The tool is released under the MIT License, see LICENSE file.
 
+## Installation
+
+You can install this debugger by setting up configuration variable to pre-compiled package on GitHub:<br>
+`WEBSITE_RUN_FROM_PACKAGE = https://github.com/vjirovsky/AzFunDebugger/releases/download/v0.5/pre-release.zip`
+<br>
+
+Alternatively you can publish this codebase to given FunctionApp via Visual Studio (Code).
+
 ## Usage
 
-Just install this codebase as package to given Azure FunctionApp and visit `<<url>>/RunTests`
+Open a URL `https://<<hostname>>/RunTests`. All tests will be displayed on this page.
 
 For tool configuration set following Configuration variables:<br>
 - `TEST_DNS_RESOLVE_DOMAINS` = <em>`<<comma-delimited list of domains>>`</em> - performs resolutions of given domains via all available DNS servers<br>
