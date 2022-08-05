@@ -24,11 +24,12 @@ namespace AzFappDebugger
         public const string APPSERVICE_WEBSITE_RUN_FROM_PACKAGE_VARIABLE = "WEBSITE_RUN_FROM_PACKAGE";
         public const string APPSERVICE_WEBSITE_CONTENTAZUREFILECONNECTIONSTRING_VARIABLE = "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING";
         public const string APPSERVICE_WEBSITE_CONTENTSHARE_VARIABLE = "WEBSITE_CONTENTSHARE";
+        public const string APPSERVICE_WEBSITE_CONTENTOVERVNET = "WEBSITE_CONTENTOVERVNET";
+
         public const string APPSERVICE_REGION_NAME_VARIABLE = "REGION_NAME";
-        
 
 
-
+        public const string APPSERVICE_FUNCTIONS_SECRETS_STORAGE_TYPE_VARIABLE = "AzureWebJobsSecretStorageType";
         public const string APPSERVICE_FUNCTIONS_WORKER_RUNTIME_VARIABLE = "FUNCTIONS_WORKER_RUNTIME";
         
 
@@ -39,6 +40,9 @@ namespace AzFappDebugger
         
         public const string MY_IP_ADDRESS_EXTERNAL_SERVICE_URL = "https://api.ipify.org/";
 
+
+        public const string FUNCTIONS_FUNCTION_FILENAME = "function.json";
+        public const string FUNCTIONS_CONTENT_FUNCTION_DIR = "site/wwwroot";
 
         public static string GetEnvironmentVariableIfSet(IDictionary<string, string> environmentVariablesDictionary, string variableName) {
 

@@ -64,7 +64,7 @@ namespace AzFappDebugger.Tests
             {
                 output += HtmlBrandingHelper.GetStandardTableRow("Region", $"<code>{configItemValue}</code>");
             }
-            
+
 
             // runtime
             configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_FUNCTIONS_WORKER_RUNTIME_VARIABLE);
@@ -91,40 +91,27 @@ namespace AzFappDebugger.Tests
             string contentFileConnectionString = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_CONTENTAZUREFILECONNECTIONSTRING_VARIABLE);
             string contentFileShare = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_CONTENTSHARE_VARIABLE);
             configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_RUN_FROM_PACKAGE_VARIABLE);
-            if ((!string.IsNullOrEmpty(configItemValue) && configItemValue.Equals("1")) || ((string.IsNullOrEmpty(configItemValue) || configItemValue.Equals("0")) && (string.IsNullOrEmpty(contentFileConnectionString))))
+
+
+            if (ContentStorageAccessTests.IsRunningFromLocalPackage(configItemValue, contentFileConnectionString, contentFileShare))
             {
                 // RUN_FROM_PACKAGE is 1 or nothing is defined
+                tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("overviewCodeRunning", TextProvider.GetTooltipTextLocalPackage(), false);
                 configItemValue = "Running from local package";
-                tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("overviewCodeRunning",
-                               $"<p>There is no other variable for code run set or the variable <code>{Constants.APPSERVICE_WEBSITE_RUN_FROM_PACKAGE_VARIABLE}</code> is set to value <code>1</code>, " +
-                               $"so the runtime runs code located in <code>d:\\home\\data\\SitePackages</code> (Windows) " +
-                               $"or <code>/home/data/SitePackages</code> (Linux).<br></p>" +
-                               $"<p>Alternative options are: <code>&lt;&lt;url&gt;&gt;</code>, or running from Azure Files with variables <code>{Constants.APPSERVICE_WEBSITE_CONTENTAZUREFILECONNECTIONSTRING_VARIABLE}</code> and <code>{Constants.APPSERVICE_WEBSITE_CONTENTSHARE_VARIABLE}</code></p>" +
-                               "<a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#enable-functions-to-run-from-a-package' target='_blank'>more about local package</a>, " +
-                               "<a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#using-website_run_from_package--url' target='_blank'>more about URL package</a>, " +
-                               "and <a href='https://docs.microsoft.com/en-us/azure/azure-functions/functions-infrastructure-as-code?tabs=windows#create-a-function-app' target='_blank'>more about Azure Files deployment</a></p>", false);
             }
-            else if (!string.IsNullOrEmpty(configItemValue))
+            else if (ContentStorageAccessTests.IsRunningFromRemotePackage(configItemValue, contentFileConnectionString, contentFileShare))
             {
                 // RUN_FROM_PACKAGE is remote URL 
-                tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("overviewCodeRunning",
-                               $"<p>The variable <code>{Constants.APPSERVICE_WEBSITE_RUN_FROM_PACKAGE_VARIABLE}</code> is set to another value than <code>1</code>, so it runs a code from this URL <code>{configItemValue}</code>.<br></p>" +
-                               $"<p>Alternative options are: <code>1</code> (run from local package), or running from Azure Files with variables <code>{Constants.APPSERVICE_WEBSITE_CONTENTAZUREFILECONNECTIONSTRING_VARIABLE}</code> and <code>{Constants.APPSERVICE_WEBSITE_CONTENTSHARE_VARIABLE}</code></p>" +
-                               "<a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#using-website_run_from_package--url' target='_blank'>more about URL package</a>, " +
-                               "<a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#enable-functions-to-run-from-a-package' target='_blank'>more about local package</a> " +
-                               "and <a href='https://docs.microsoft.com/en-us/azure/azure-functions/storage-considerations#create-an-app-without-azure-files' target='_blank'>more about Azure Files deployment</a></p>", false);
+                tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("overviewCodeRunning", TextProvider.GetTooltipTextRemotePackage(configItemValue), false);
                 configItemValue = "Running from package, remote URL";
             }
-            else {
+            else
+            {
                 // no RUN_FROM_PACKAGE is set, but file connection string is set
-                tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("overviewCodeRunning",
-                               $"<p>The variable <code>{Constants.APPSERVICE_WEBSITE_CONTENTAZUREFILECONNECTIONSTRING_VARIABLE}</code> is set, so the code should be loaded from Azure Files storage <code>{contentFileShare}</code>." +
-                               "<a href='https://docs.microsoft.com/en-us/azure/azure-functions/storage-considerations#create-an-app-without-azure-files' target='_blank'>more about Azure Files deployment</a>, " +
-                               "<a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#using-website_run_from_package--url' target='_blank'>more about URL package</a> " +
-                               "and <a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#enable-functions-to-run-from-a-package' target='_blank'>more about local package</a>", false);
-                configItemValue = "Running from Azure Files";
+                tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("overviewCodeRunning", TextProvider.GetTooltipTextFromContentStorage(contentFileShare), false);
+                configItemValue = "Running from Azure Files <button class='btn btn-sm btn-outline-info' onclick=\"const csaTabEl = document.querySelector('#main-tab4');const csaTab = new bootstrap.Tab(csaTabEl);csaTab.show()\" style=\"--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;\">details</button><br>";
             }
-            
+
             output += HtmlBrandingHelper.GetStandardTableRow("Code location", $"{configItemValue} {tooltipText}");
 
             // timezone
@@ -133,7 +120,7 @@ namespace AzFappDebugger.Tests
             {
                 output += HtmlBrandingHelper.GetStandardTableRow("Timezone", $"<code>{configItemValue}</code>");
             }
-            
+
 
             output += "</table>";
 

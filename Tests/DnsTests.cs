@@ -80,7 +80,7 @@ namespace AzFappDebugger.Tests
 
         public bool IsEnforcedAltDns()
         {
-            if (string.IsNullOrEmpty(_enforcedAltDnsServer) && string.IsNullOrEmpty(_enforcedAltDnsServer))
+            if (string.IsNullOrEmpty(_enforcedAltDnsServer))
             {
                 return false;
             }

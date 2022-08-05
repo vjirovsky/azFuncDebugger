@@ -60,20 +60,24 @@ namespace AzFappDebugger
             var outboundConnectivityTestsProvider = new OutboundConnectivityTests(_environmentVariablesDictionary, _defaultHttpClient);
             var overviewTestsProvider = new OverviewTests(_environmentVariablesDictionary);
             var contentStorageAccessTestsProvider = new ContentStorageAccessTests(_environmentVariablesDictionary);
+            var hostDataAccessTestsProvider = new HostDataAccessTests(_environmentVariablesDictionary);
+            
 
-            string dnsTestsOutput = "", outboundConnectivityTestsOutput = "", overviewTestsOutput = "", contentStorageAccessTestsOutput = ""; 
+            string dnsTestsOutput = "", outboundConnectivityTestsOutput = "", overviewTestsOutput = "", hostDataAccessTestsOutput = "", contentStorageAccessTestsOutput = "";
 
             var task1 = Task.Factory.StartNew(() => dnsTestsProvider.RunAllTestsAsHtmlOutput());
             var task2 = Task.Factory.StartNew(async() =>  await outboundConnectivityTestsProvider.RunAllTestsAsHtmlOutputAsync());
             var task3 = Task.Factory.StartNew(() => contentStorageAccessTestsProvider.RunAllTestsAsHtmlOutput());
             var task4 = Task.Factory.StartNew(() => overviewTestsProvider.RunAllTestsAsHtmlOutput());
+            var task5 = Task.Factory.StartNew(() => hostDataAccessTestsProvider.RunAllTestsAsHtmlOutput());
 
 
-            await Task.WhenAll(task1, task2, task3,task4);
+            await Task.WhenAll(task1, task2, task3,task4,task5);
             dnsTestsOutput = task1.Result;
             outboundConnectivityTestsOutput = await task2.Result;
             contentStorageAccessTestsOutput = task3.Result;
             overviewTestsOutput = task4.Result;
+            hostDataAccessTestsOutput = task5.Result;
 
 
             responseMessage += "" +
@@ -81,13 +85,15 @@ namespace AzFappDebugger
                     HtmlBrandingHelper.GetBootstrapTabNavItem(0, "Overview", true) +
                     HtmlBrandingHelper.GetBootstrapTabNavItem(1, "DNS") +
                     HtmlBrandingHelper.GetBootstrapTabNavItem(2, "Outbound connectivity") +
-                    HtmlBrandingHelper.GetBootstrapTabNavItem(3, "Content storage access") +
+                    HtmlBrandingHelper.GetBootstrapTabNavItem(3, "Host data access") +
+                    HtmlBrandingHelper.GetBootstrapTabNavItem(4, "Content storage access") +
                 "</ul>" +
                 "<div class='tab-content' id='myTabContent'>" +
                     HtmlBrandingHelper.GetBootstrapTabBody(0, overviewTestsOutput, true) +
                     HtmlBrandingHelper.GetBootstrapTabBody(1, dnsTestsOutput) +
                     HtmlBrandingHelper.GetBootstrapTabBody(2, outboundConnectivityTestsOutput) +
-                    HtmlBrandingHelper.GetBootstrapTabBody(3, contentStorageAccessTestsOutput) +
+                    HtmlBrandingHelper.GetBootstrapTabBody(3, hostDataAccessTestsOutput) +
+                    HtmlBrandingHelper.GetBootstrapTabBody(4, contentStorageAccessTestsOutput) +
                 "</div>";
 
 
