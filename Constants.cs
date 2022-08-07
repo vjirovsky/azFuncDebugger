@@ -37,7 +37,9 @@ namespace AzFappDebugger
 
         public const string TEST_DNS_RESOLVE_DOMAIN_VARIABLE = "TEST_DNS_RESOLVE_DOMAIN";
         public const string TEST_HTTPCLIENT_RESOLVE_URL_VARIABLE = "TEST_HTTPCLIENT_GET_URL";
-        
+        public const string TEST_WEBSITE_CONTENTAZUREFILECONNECTIONSTRING_VARIABLE = "TEST_CCONNECTIONSTRING";
+        public const string TEST_WEBSITE_CONTENTSHARE_VARIABLE = "TEST_CSHARE";
+
         public const string MY_IP_ADDRESS_EXTERNAL_SERVICE_URL = "https://api.ipify.org/";
 
 

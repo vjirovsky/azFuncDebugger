@@ -102,6 +102,33 @@ namespace AzFappDebugger.Tests
         }
 
 
+        public static string RunNameresolverExeTest(string domain)
+        {
+
+            string testResult = "";
+            try
+            {
+
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.FileName = Path.Combine("C:\\windows\\system32", "nameresolver.exe");
+                p.StartInfo.Arguments = domain;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.Start();
+                p.WaitForExit();
+
+
+                testResult = p.StandardOutput.ReadToEnd();
+            }
+            catch (Exception e)
+            {
+                testResult = "<span class=\"badge text-bg-danger\">QUERY FAILED</span> " + e.Message;
+            }
+
+            return testResult;
+        }
+
+
         internal string RunAllTestsAsHtmlOutput()
         {
             string output = "", tooltipText = "";
@@ -114,10 +141,10 @@ namespace AzFappDebugger.Tests
 
             if (!IsEnforcedPrimaryDns())
             {
-                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", 
+                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers",
                     "<strong>Microsoft's managed public DNS servers</strong>" +
                     "<span class='badge text-bg-warning'>problematic Azure Private DNS Zones support</span>" +
-                    
+
                     HtmlBrandingHelper.GetBootstrapWhatItMeans("dnsServer",
                     "<p>The application is using default Azure public DNS servers.</p>" +
                     "<p>During access to private resources, this setup could introduce random issues with resolving records hosted in Azure Private DNS Zones within vNET." +
@@ -159,7 +186,7 @@ namespace AzFappDebugger.Tests
                     "<p>To enable integration with Azure Private DNS Zones, you need to set up your DNS servers with a service Azure DNS Private Resolver to forward requests.<br> " +
                     "<a href='https://docs.microsoft.com/en-us/azure/dns/dns-private-resolver-overview' target='_blank'>more info</a></p>", false);
 
-                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers", 
+                output += HtmlBrandingHelper.GetStandardTableRow("DNS servers",
                     $"<strong>Custom DNS servers</strong> <span class='badge text-bg-warning'>can affect Azure Private DNS Zones resolution</span><br>" +
                     $"<ul>" +
                     $"<li>Primary server: <code>{_enforcedPrimaryDnsServer}</code></li>" +
@@ -200,7 +227,7 @@ namespace AzFappDebugger.Tests
             output += $"<div class='callout callout-danger'>Nameresolver.exe is not available on local machines, just in KUDU engine.</div>";
 
 #else
-          
+
 
             if (dnsDomainsToResolveList.Count == 0)
             {
@@ -215,26 +242,7 @@ namespace AzFappDebugger.Tests
 
                 foreach (var domain in dnsDomainsToResolveList)
                 {
-                    string testResult = "";
-                    try
-                    {
-
-                        Process p = new Process();
-                        p.StartInfo.UseShellExecute = false;
-                        p.StartInfo.FileName = Path.Combine("C:\\windows\\system32", "nameresolver.exe");
-                        p.StartInfo.Arguments = domain;
-                        p.StartInfo.RedirectStandardOutput = true;
-                        p.Start();
-                        p.WaitForExit();
-
-
-                        testResult = p.StandardOutput.ReadToEnd();
-                    }
-                    catch (Exception e)
-                    {
-                        testResult = "<span class=\"badge text-bg-danger\">QUERY FAILED</span> " + e.Message;
-                    }
-
+                    string testResult = RunNameresolverExeTest(domain);
                     output += HtmlBrandingHelper.GetStandardTableRow($"{domain}", $"<pre>{testResult}</pre>");
 
                 }
@@ -245,7 +253,7 @@ namespace AzFappDebugger.Tests
 
             //primary DNS requested by WEBSITE_DNS_SERVER
 
-            if(IsEnforcedPrimaryDns() && (dnsDomainsToResolveList.Count > 0) && _dnsLookupEnforcedPrimaryClient != null)
+            if (IsEnforcedPrimaryDns() && (dnsDomainsToResolveList.Count > 0) && _dnsLookupEnforcedPrimaryClient != null)
             {
                 output += $"<h4>Primary DNS server <code>{_enforcedPrimaryDnsServer}</code></h4> <small>";
                 output += HtmlBrandingHelper.GetBootstrapWhatItMeans("TestResolutionPrimaryDnsServer",
@@ -286,7 +294,7 @@ namespace AzFappDebugger.Tests
             {
                 output += $"<h4>Alternate DNS server <code>{_enforcedAltDnsServer}</code></h4> <small>";
                 output += HtmlBrandingHelper.GetBootstrapWhatItMeans("TestResolutionAltDnsServer",
-                    $"<p>This test performs DNS resolution via DNS client included in this debugger, directly against server <code>{_enforcedAltDnsServer}</code> specified in <code>{Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE}</code> configuration variable.</p>", false, false, "Test description"); 
+                    $"<p>This test performs DNS resolution via DNS client included in this debugger, directly against server <code>{_enforcedAltDnsServer}</code> specified in <code>{Constants.APPSERVICE_DNS_ALT_SERVER_VARIABLE}</code> configuration variable.</p>", false, false, "Test description");
                 output += "</small>";
 
                 output += "<table class=\"table\">";

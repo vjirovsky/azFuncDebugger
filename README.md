@@ -31,6 +31,19 @@ For tool configuration set following Configuration variables:<br>
 <em> e.g.  `TEST_DNS_RESOLVE_DOMAINS` = `https://vjirovsky.cz` </em>
 
 
+### Content Storage Access Simulator
+
+The tool/debugger has built-in simulator for testing access to content storage (in case the application doesn't use package deployment). 
+You can test desired configuration with setting up follow variables:
+
+- `TEST_CCONNECTIONSTRING` = `<<connection string as in WEBSITE_CONTENTAZUREFILECONNECTIONSTRING variable>>`<br>
+<em>e.g. - `TEST_CCONNECTIONSTRING` = `DefaultEndpointsProtocol=https;AccountName=xyzmystorageaccount;AccountKey=xxxxxxxxxxxxxxxxxxxxxxxx;EndpointSuffix=core.windows.net` </em>
+<br><br>
+- `TEST_CSHARE` = `<<file share name as in WEBSITE_CONTENTSHARE variable>>`<br>
+<em>e.g. - `TEST_CSHARE` = `myfilesharestorage` </em>
+
+
+
 ## Issues
 
 Please report any issue into [GitHub issues](https://github.com/vjirovsky/AzFunDebugger/issues).
