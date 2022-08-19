@@ -111,7 +111,20 @@ namespace AzFappDebugger.Tests
 
                 Process p = new Process();
                 p.StartInfo.UseShellExecute = false;
-                p.StartInfo.FileName = Path.Combine("C:\\windows\\system32", "nameresolver.exe");
+
+                var enviromentPath = Environment.GetEnvironmentVariable("PATH");
+
+                var paths = enviromentPath.Split(';');
+                var exePath = paths.Select(x => Path.Combine(x, Constants.NAMERESOLVER_TOOL_EXECUTABLE))
+                                   .Where(x => File.Exists(x))
+                                   .FirstOrDefault();
+
+                if (string.IsNullOrWhiteSpace(exePath))
+                {
+                    throw new Exception("The tool " + Constants.NAMERESOLVER_TOOL_EXECUTABLE + " could not be found.");
+                }
+
+                p.StartInfo.FileName = exePath;
                 p.StartInfo.Arguments = domain;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.Start();

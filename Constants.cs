@@ -46,6 +46,8 @@ namespace AzFappDebugger
         public const string FUNCTIONS_FUNCTION_FILENAME = "function.json";
         public const string FUNCTIONS_CONTENT_FUNCTION_DIR = "site/wwwroot";
 
+        public static string NAMERESOLVER_TOOL_EXECUTABLE = "nameresolver.exe";
+
         public static string GetEnvironmentVariableIfSet(IDictionary<string, string> environmentVariablesDictionary, string variableName) {
 
             if (environmentVariablesDictionary.ContainsKey(variableName))

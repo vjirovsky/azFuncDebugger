@@ -265,3 +265,4 @@ __pycache__/
 /Properties/PublishProfiles
 /Properties/ServiceDependencies/mydnstestfappase - Zip Deploy
 /Properties/ServiceDependencies/testfunazdebugger - Web Deploy/profile.arm.json
+/Properties/ServiceDependencies
