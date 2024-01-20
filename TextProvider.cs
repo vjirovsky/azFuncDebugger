@@ -41,5 +41,27 @@ namespace AzFappDebugger
                 "<a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#using-website_run_from_package--url' target='_blank'>more about URL package</a> " +
                 "and <a href='https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package#enable-functions-to-run-from-a-package' target='_blank'>more about local package</a>";
         }
+
+        internal static string GetTooltipTextForTimezoneWrongOnLinux(string timeZone)
+        {
+            return
+                $"<p>The runtime OS is Linux and the variable <code>{Constants.APPSERVICE_WEBSITE_TIME_ZONE_VARIABLE}</code> is set, but the value <code>{timeZone}</code> seems to be in non-Unix format for timezones.<br><br>" +
+                "<a href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones' target='_blank'>List of supported Unix time zones</a> (<i>TZ identifier</i> column).";
+        }
+
+        internal static string GetTooltipTextForTimezoneWrongOnWindows(string timeZone)
+        {
+            return
+                $"<p>The runtime OS is Windows and the variable <code>{Constants.APPSERVICE_WEBSITE_TIME_ZONE_VARIABLE}</code> is set, but the value <code>{timeZone}</code> is not supported in current runtime.<br><br>" +
+                "<a href='https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-vista/cc749073(v=ws.10)?redirectedfrom=MSDN#time-zones' target='_blank'>List of supported time zones on Windows</a>";
+        }
+
+        internal static string GetTooltipTextForTimezoneRightOnWindows(string timeZone)
+        {
+            return
+                $"<p>The variable <code>{Constants.APPSERVICE_WEBSITE_TIME_ZONE_VARIABLE}</code> is set to supported value in current runtime.<br><br>" +
+                "<a href='https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-vista/cc749073(v=ws.10)?redirectedfrom=MSDN#time-zones' target='_blank'>List of supported time zones on Windows</a>";
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DnsClient;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AzFappDebugger.Tests
@@ -75,6 +77,7 @@ namespace AzFappDebugger.Tests
 
             // OS
             configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_OS_VARIABLE);
+            var os = configItemValue;
             if (!string.IsNullOrEmpty(configItemValue))
             {
                 output += HtmlBrandingHelper.GetStandardTableRow("Website OS", $"<code>{configItemValue}</code>");
@@ -115,11 +118,58 @@ namespace AzFappDebugger.Tests
             output += HtmlBrandingHelper.GetStandardTableRow("Code location", $"{configItemValue} {tooltipText}");
 
             // timezone
-            output += HtmlBrandingHelper.GetStandardTableRow("Current time", $"<code>{DateTime.Now.ToLocalTime().ToShortTimeString()}</code>");
+            output += HtmlBrandingHelper.GetStandardTableRow("Current time", $"<code>{DateTime.Now.ToShortTimeString()}</code>");
+            
             configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_TIME_ZONE_VARIABLE);
+
+            bool isMatch;
+            tooltipText = String.Empty;
+
             if (!string.IsNullOrEmpty(configItemValue))
             {
-                output += HtmlBrandingHelper.GetStandardTableRow("Timezone", $"<code>{configItemValue}</code>");
+                if (os.ToLower().Equals("linux"))
+                {
+                    // guessing if timezone format is the Unix-expected
+                    isMatch = Regex.IsMatch(configItemValue, "\\S+/\\S+", RegexOptions.IgnoreCase);
+                    if (isMatch)
+                    {
+                        output += HtmlBrandingHelper.GetStandardTableRow("Timezone", "<code>" + configItemValue + $"</code>");
+                    }
+                    else
+                    {
+                        // is it valid Unix-timezone? seems like Windows-timezone
+                        tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("timezoneProblem", TextProvider.GetTooltipTextForTimezoneWrongOnLinux(configItemValue), false);
+                        output += HtmlBrandingHelper.GetStandardTableRow("Timezone",
+                        $"<code>" + configItemValue + $"</code> <span class=\"badge text-bg-danger\">Probably wrong format</span><br>" +
+                        $"{tooltipText}");
+                    }
+                    
+                    
+                }
+                else if (os.ToLower().Equals("windows"))
+                {
+                    var correspondingTimeZone = TimeZoneInfo.GetSystemTimeZones().SingleOrDefault(tz => tz.Id.Equals(configItemValue));
+                    if (correspondingTimeZone == null)
+                    {
+                        //timezone doesn't exist in current runtime
+                        tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("timezoneProblem", TextProvider.GetTooltipTextForTimezoneWrongOnWindows(configItemValue), false);
+                        output += HtmlBrandingHelper.GetStandardTableRow("Timezone",
+                        $"<code>" + configItemValue + $"</code> <span class=\"badge text-bg-danger\">Unknown timezone</span><br>" +
+                        $"{tooltipText}");
+                    }
+                    else {
+                        tooltipText = HtmlBrandingHelper.GetBootstrapWhatItMeans("timezoneOk", TextProvider.GetTooltipTextForTimezoneRightOnWindows(configItemValue), false);
+                        output += HtmlBrandingHelper.GetStandardTableRow("Timezone",
+                        $"<code>" + configItemValue + $"</code>&nbsp; <span class=\"badge text-bg-success\">Valid timezone</span><br>" +
+                        $"{tooltipText}");
+                    }
+                }
+                else {
+                    // unknown OS, skipping test
+                    output += HtmlBrandingHelper.GetStandardTableRow("Timezone", $"<code>{configItemValue}</code>");
+                }
+
+
             }
 
 
