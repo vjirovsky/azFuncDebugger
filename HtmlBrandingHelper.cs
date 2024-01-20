@@ -21,7 +21,7 @@ namespace AzFappDebugger
                 (isWrappedInContainer ? GetBootstrapHtmlContainerWrap(bodyContent) : bodyContent) +
                 "<footer class='bd-footer bg-light small'>" +
                 "   <div class='container text-center link-dark'><br><p>" +
-                "           &copy; <a href='https://www.vjirovsky.cz#utm_source=link&utm_medium=azfundebugger&utm_campaign=footer' target='_blank'>Vaclav Jirovsky</a>, 2022  (<a href='https://github.com/vjirovsky/AzFunDebugger' target='_blank'>GitHub project</a>) " +
+                "           &copy; <a href='https://www.vjirovsky.cz#utm_source=link&utm_medium=azfundebugger&utm_campaign=footer' target='_blank'>Vaclav Jirovsky</a>, 2022 - 2024  (<a href='https://github.com/vjirovsky/AzFunDebugger' target='_blank'>GitHub project</a>) " +
                 "   </p></div>" +
                 "</footer>" +
                 "</body>" +

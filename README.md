@@ -14,7 +14,7 @@ The tool is released under the MIT License, see LICENSE file.
 ## Installation
 
 You can install this debugger by setting up configuration variable to pre-compiled package on GitHub:<br>
-`WEBSITE_RUN_FROM_PACKAGE = https://github.com/vjirovsky/AzFunDebugger/releases/download/v0.6/pre-release.zip`
+`WEBSITE_RUN_FROM_PACKAGE = https://github.com/vjirovsky/azFuncDebugger/releases/download/v0.6/pre-release.zip`
 <br>
 
 Alternatively you can publish this codebase to given FunctionApp via Visual Studio (Code).
@@ -46,4 +46,4 @@ You can test desired configuration with setting up follow variables:
 
 ## Issues
 
-Please report any issue into [GitHub issues](https://github.com/vjirovsky/AzFunDebugger/issues).
+Please report any issue into [GitHub issues](https://github.com/vjirovsky/azFuncDebugger/issues).
