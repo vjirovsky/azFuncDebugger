@@ -115,6 +115,7 @@ namespace AzFappDebugger.Tests
             output += HtmlBrandingHelper.GetStandardTableRow("Code location", $"{configItemValue} {tooltipText}");
 
             // timezone
+            output += HtmlBrandingHelper.GetStandardTableRow("Current time", $"<code>{DateTime.Now.ToLocalTime().ToShortTimeString()}</code>");
             configItemValue = Constants.GetEnvironmentVariableIfSet(_environmentVariablesDictionary, Constants.APPSERVICE_WEBSITE_TIME_ZONE_VARIABLE);
             if (!string.IsNullOrEmpty(configItemValue))
             {
