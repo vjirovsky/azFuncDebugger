@@ -24,11 +24,11 @@ Alternatively you can publish this codebase to given FunctionApp via Visual Stud
 Open a URL `https://<<hostname>>/RunTests`. All tests will be displayed on this page.
 
 For tool configuration set following Configuration variables:<br>
-- `TEST_DNS_RESOLVE_DOMAINS` = <em>`<<comma-delimited list of domains>>`</em> - performs resolutions of given domains via all available DNS servers<br>
-<em>e.g. `TEST_DNS_RESOLVE_DOMAINS` = `azure.com,someonpremresource.contoso.internal,vjirovsky.cz` </em>
+- `TEST_DNS_RESOLVE_DOMAIN` = <em>`<<comma-delimited list of domains>>`</em> - performs resolutions of given domains via all available DNS servers<br>
+<em>e.g. `TEST_DNS_RESOLVE_DOMAIN` = `azure.com,someonpremresource.contoso.internal,vjirovsky.cz` </em>
 
 - `TEST_HTTPCLIENT_GET_URL` = <em>`<<url to test>>`</em> - performs HTTP request to given URL via same outbound connectivity configuration as the real application will use<br>
-<em> e.g.  `TEST_DNS_RESOLVE_DOMAINS` = `https://vjirovsky.cz` </em>
+<em> e.g.  `TEST_HTTPCLIENT_GET_URL` = `https://vjirovsky.cz` </em>
 
 
 ### Content Storage Access Simulator
